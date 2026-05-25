@@ -133,7 +133,11 @@ const Sidebar = ({ isOpen, toggleSidebar, user }: { isOpen: boolean; toggleSideb
   return (
     <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-slate-900 text-white transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0`}>
       <div className="flex items-center justify-between h-16 px-6 bg-slate-900 border-b border-slate-800">
+<<<<<<< HEAD
         <span className="text-xl font-bold tracking-wider text-blue-400">AJAX</span>
+=======
+        <span className="text-xl font-bold tracking-wider text-blue-400">AJAX HR PORTAL</span>
+>>>>>>> 0cad36d4698708500abd3e1ca3f0c38c80e93327
         <button className="lg:hidden" onClick={toggleSidebar}>
           <X size={24} />
         </button>

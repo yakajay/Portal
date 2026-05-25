@@ -133,7 +133,7 @@ const Sidebar = ({ isOpen, toggleSidebar, user }: { isOpen: boolean; toggleSideb
   return (
     <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-slate-900 text-white transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0`}>
       <div className="flex items-center justify-between h-16 px-6 bg-slate-900 border-b border-slate-800">
-        <span className="text-xl font-bold tracking-wider text-blue-400">DARWINBOX</span>
+        <span className="text-xl font-bold tracking-wider text-blue-400">AJAX</span>
         <button className="lg:hidden" onClick={toggleSidebar}>
           <X size={24} />
         </button>
@@ -178,7 +178,6 @@ const Header = ({ toggleSidebar, user, onLogout }: { toggleSidebar: () => void; 
       
       <div className="flex items-center space-x-4">
         <div className="hidden lg:flex items-center text-xs font-bold text-slate-400 tracking-widest uppercase border-r border-slate-200 pr-4 h-8">
-          <span className="text-blue-600 mr-1">YAK SOFTWARE SOLUTIONS</span>
         </div>
         <UserDropdown user={user} onLogout={onLogout} />
       </div>

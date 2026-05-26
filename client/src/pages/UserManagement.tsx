@@ -11,7 +11,12 @@ const UserModal = ({ isOpen, onClose, onSave, editingUser }) => {
 
   useEffect(() => {
     if (editingUser) {
-      setFormData(editingUser);
+      setFormData({
+        ...editingUser,
+        permissions: Array.isArray(editingUser.permissions) 
+          ? editingUser.permissions 
+          : (editingUser.permissions?.split(',') || ['read'])
+      });
     } else {
       setFormData({
         name: '',
@@ -290,7 +295,7 @@ const UserManagement = () => {
                 </td>
                 <td className="px-6 py-4">
                   <div className="flex flex-wrap gap-1">
-                    {u.permissions.map(p => (
+                    {(Array.isArray(u.permissions) ? u.permissions : (u.permissions?.split(',') || [])).map(p => (
                       <span key={p} className="text-[10px] px-1.5 py-0.5 bg-slate-100 text-slate-600 rounded uppercase font-bold">
                         {p}
                       </span>

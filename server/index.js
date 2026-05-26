@@ -46,14 +46,29 @@ app.get('/api/users', async (req, res) => {
 app.post('/api/users', async (req, res) => {
   try {
     const { email, name, role, permissions, department, managerId } = req.body;
+    
+    // Handle permissions if they are passed as an array
+    const permissionsString = Array.isArray(permissions) 
+      ? permissions.join(',') 
+      : (permissions || (role === 'USER' ? 'read' : 'read,write'));
+
     const user = await prisma.user.create({
       data: {
         email,
         name,
         department: department || 'Engineering',
         role: role || 'USER',
-        permissions: permissions || (role === 'USER' ? 'read' : 'read,write'),
+        permissions: permissionsString,
         managerId: managerId ? parseInt(managerId) : null
+      },
+      include: {
+        manager: {
+          select: {
+            id: true,
+            name: true,
+            email: true
+          }
+        }
       }
     });
     res.status(201).json(user);
@@ -65,16 +80,31 @@ app.post('/api/users', async (req, res) => {
 app.put('/api/users/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { managerId, ...rest } = req.body;
+    const { managerId, permissions, ...rest } = req.body;
     
     const updateData = { ...rest };
     if (managerId !== undefined) {
       updateData.managerId = managerId ? parseInt(managerId) : null;
     }
+    
+    if (permissions !== undefined) {
+      updateData.permissions = Array.isArray(permissions) 
+        ? permissions.join(',') 
+        : permissions;
+    }
 
     const user = await prisma.user.update({
       where: { id: parseInt(id) },
-      data: updateData
+      data: updateData,
+      include: {
+        manager: {
+          select: {
+            id: true,
+            name: true,
+            email: true
+          }
+        }
+      }
     });
     res.json(user);
   } catch (error) {
@@ -113,38 +143,6 @@ app.post('/api/documents', async (req, res) => {
       }
     });
     res.status(201).json(document);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-
-app.post('/api/users', async (req, res) => {
-  try {
-    const { email, name, role, permissions, department } = req.body;
-    const user = await prisma.user.create({
-      data: {
-        email,
-        name,
-        department: department || 'Engineering',
-        role: role || 'USER',
-        permissions: permissions || (role === 'USER' ? ['read'] : ['read', 'write'])
-      }
-    });
-    res.status(201).json(user);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-app.put('/api/users/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const user = await prisma.user.update({
-      where: { id: parseInt(id) },
-      data: req.body
-    });
-    res.json(user);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
